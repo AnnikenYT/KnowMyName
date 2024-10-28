@@ -18,11 +18,11 @@ public class BlockEntityMixin {
     public void toUpdatePacket(CallbackInfoReturnable<Packet<ClientPlayPacketListener>> callback) {
         var self = (BlockEntity) (Object) (this);
         KnowMyNameMod.updateNBT(self)
-                .map(nbt -> BlockEntityUpdateS2CPacket.create(self, $ -> nbt))
+                .map(nbt -> BlockEntityUpdateS2CPacket.create(self, (be, dm) -> nbt))
                 .ifPresent(callback::setReturnValue);
     }
 
-    @Inject(at = @At("HEAD"), method = "toInitialChunkDataNbt()Lnet/minecraft/nbt/NbtCompound;", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "toInitialChunkDataNbt(Lnet/minecraft/registry/RegistryWrapper$WrapperLookup;)Lnet/minecraft/nbt/NbtCompound;", cancellable = true)
     public void toInitialChunkDataNbt(CallbackInfoReturnable<NbtCompound> callback) {
         var self = (BlockEntity) (Object) (this);
         KnowMyNameMod.updateNBT(self).ifPresent(callback::setReturnValue);
