@@ -31,9 +31,8 @@ jobs:
       - name: Build and upload
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: build curseforge modrinth publish
+          arguments: build modrinth publish
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
           CHANGELOG: ${{ github.event.release.body }}
@@ -44,4 +43,3 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           file: build/libs/knowmyname-${{ github.event.release.tag_name }}.jar
-          asset_name: knowmyname-${{ github.event.release.tag_name }}.jar

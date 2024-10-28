@@ -4,7 +4,7 @@
   "version": "${mod_version}",
 
   "name": "${mod_name}",
-  "description": "Allows easy customization of villager trades using datapacks",
+  "description": "Adds support for resourcepacks that change block textures based on their container name on servers.",
   "authors": ["${mod_author}"],
   "contact": {
     "sources": "https://github.com/${repository}",
@@ -20,9 +20,8 @@
   "mixins": ["${mod_id}.mixins.json"],
 
   "depends": {
-    "fabricloader": ">=0.14",
-    "fabric": "*",
-    "minecraft": ">=1.19.3",
+    "fabricloader": ">=0.16",
+    "minecraft": ">=1.20.1",
     "java": ">=17"
   }
 }
