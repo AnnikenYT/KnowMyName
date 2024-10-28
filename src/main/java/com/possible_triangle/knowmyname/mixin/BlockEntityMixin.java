@@ -6,6 +6,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryWrapper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,14 +19,14 @@ public class BlockEntityMixin {
     public void toUpdatePacket(CallbackInfoReturnable<Packet<ClientPlayPacketListener>> callback) {
         var self = (BlockEntity) (Object) (this);
         KnowMyNameMod.updateNBT(self)
-                .map(nbt -> BlockEntityUpdateS2CPacket.create(self, (be, dm) -> nbt))
+                .map(nbt -> BlockEntityUpdateS2CPacket.create(self, (be, dm) -> nbt.apply(dm)))
                 .ifPresent(callback::setReturnValue);
     }
 
     @Inject(at = @At("HEAD"), method = "toInitialChunkDataNbt(Lnet/minecraft/registry/RegistryWrapper$WrapperLookup;)Lnet/minecraft/nbt/NbtCompound;", cancellable = true)
-    public void toInitialChunkDataNbt(CallbackInfoReturnable<NbtCompound> callback) {
+    public void toInitialChunkDataNbt(RegistryWrapper.WrapperLookup lookup, CallbackInfoReturnable<NbtCompound> callback) {
         var self = (BlockEntity) (Object) (this);
-        KnowMyNameMod.updateNBT(self).ifPresent(callback::setReturnValue);
+        KnowMyNameMod.updateNBT(self).map(it -> it.apply(lookup)).ifPresent(callback::setReturnValue);
     }
 
 }
