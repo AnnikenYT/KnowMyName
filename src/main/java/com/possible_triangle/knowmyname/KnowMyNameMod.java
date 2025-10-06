@@ -1,23 +1,22 @@
 package com.possible_triangle.knowmyname;
 
-import net.fabricmc.api.ModInitializer;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.Nameable;
-
 import java.util.Optional;
 import java.util.function.Function;
+import net.fabricmc.api.ModInitializer;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.Nameable;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class KnowMyNameMod implements ModInitializer {
     @Override
     public void onInitialize() {
     }
 
-    public static Optional<Function<RegistryWrapper.WrapperLookup, NbtCompound>> updateNBT(BlockEntity tile) {
+    public static Optional<Function<HolderLookup.Provider, CompoundTag>> updateNBT(BlockEntity tile) {
         if (tile instanceof Nameable nameable && nameable.hasCustomName()) {
             return Optional.of(lookup -> {
-                var nbt = tile.createNbt(lookup);
+                var nbt = tile.getUpdateTag(lookup);
                 nbt.remove("Items");
                 return nbt;
             });

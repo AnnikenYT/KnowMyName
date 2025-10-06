@@ -2,26 +2,28 @@
   "schemaVersion": 1,
   "id": "${mod_id}",
   "version": "${mod_version}",
-
   "name": "${mod_name}",
   "description": "Adds support for resourcepacks that change block textures based on their container name on servers.",
-  "authors": ["${mod_author}"],
+  "authors": [
+    "${mod_author}"
+  ],
   "contact": {
     "sources": "https://github.com/${repository}",
     "issues": "https://github.com/${repository}/issues"
   },
-
   "license": "CC0-1.0",
-
   "environment": "*",
   "entrypoints": {
-    "main": ["com.possible_triangle.knowmyname.KnowMyNameMod"]
+    "main": [
+      "com.possible_triangle.knowmyname.KnowMyNameMod"
+    ]
   },
-  "mixins": ["${mod_id}.mixins.json"],
-
+  "mixins": [
+    "${mod_id}.mixins.json"
+  ],
   "depends": {
-    "fabricloader": ">=0.16",
+    "fabricloader": ">=0.17",
     "minecraft": ">=1.21.1",
-    "java": ">=17"
+    "java": ">=21"
   }
 }

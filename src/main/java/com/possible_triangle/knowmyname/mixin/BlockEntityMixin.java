@@ -1,12 +1,12 @@
 package com.possible_triangle.knowmyname.mixin;
 
 import com.possible_triangle.knowmyname.KnowMyNameMod;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,16 +15,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BlockEntity.class)
 public class BlockEntityMixin {
 
-    @Inject(at = @At("HEAD"), method = "toUpdatePacket()Lnet/minecraft/network/packet/Packet;", cancellable = true)
-    public void toUpdatePacket(CallbackInfoReturnable<Packet<ClientPlayPacketListener>> callback) {
+    @Inject(at = @At("HEAD"), method = "getUpdatePacket", cancellable = true)
+    public void toUpdatePacket(CallbackInfoReturnable<Packet<ClientGamePacketListener>> callback) {
         var self = (BlockEntity) (Object) (this);
         KnowMyNameMod.updateNBT(self)
-                .map(nbt -> BlockEntityUpdateS2CPacket.create(self, (be, dm) -> nbt.apply(dm)))
+                .map(nbt -> ClientboundBlockEntityDataPacket.create(self, (be, dm) -> nbt.apply(dm)))
                 .ifPresent(callback::setReturnValue);
     }
 
-    @Inject(at = @At("HEAD"), method = "toInitialChunkDataNbt(Lnet/minecraft/registry/RegistryWrapper$WrapperLookup;)Lnet/minecraft/nbt/NbtCompound;", cancellable = true)
-    public void toInitialChunkDataNbt(RegistryWrapper.WrapperLookup lookup, CallbackInfoReturnable<NbtCompound> callback) {
+    @Inject(at = @At("HEAD"), method = "saveWithoutMetadata", cancellable = true)
+    public void toInitialChunkDataNbt(HolderLookup.Provider lookup, CallbackInfoReturnable<CompoundTag> callback) {
         var self = (BlockEntity) (Object) (this);
         KnowMyNameMod.updateNBT(self).map(it -> it.apply(lookup)).ifPresent(callback::setReturnValue);
     }
