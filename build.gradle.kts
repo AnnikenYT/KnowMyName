@@ -3,7 +3,6 @@ plugins {
 }
 
 val yarn_mappings: String by extra
-val continuity_version: String by extra
 
 fabric {
     enableMixins()
@@ -12,16 +11,6 @@ fabric {
         dependencies.create("net.fabricmc:yarn:${yarn_mappings}:v2")
     }
 }
-
-repositories {
-    modrinthMaven()
-}
-
-dependencies {
-    modRuntimeOnly("maven.modrinth:continuity:${continuity_version}")
-}
-
-enablePublishing()
 
 val possibleMinecraftVersions = project.extra["possible_minecraft_versions"].toString().split(",")
 
@@ -33,3 +22,5 @@ uploadToModrinth {
     minecraftVersions = possibleMinecraftVersions
     syncBodyFromReadme()
 }
+
+enablePublishing()
